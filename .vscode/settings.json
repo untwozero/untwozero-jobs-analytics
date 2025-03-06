@@ -1,0 +1,21 @@
+{
+    // Ensure that VS Code automatically uses the project's virtual environment
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
+    // Set the default working directory (cwd) for the integrated terminal
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#009edb", // UN Blue
+        "titleBar.activeForeground": "#ffffff" // White text
+    },
+    // Set the path for Jupyter notebooks or interactive sessions executed in VS Code
+    // - project root is recommended
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
+    "python.analysis.extraPaths": [ "src" ],
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.analysis.typeCheckingMode": "basic",
+
+
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "indent"
+}

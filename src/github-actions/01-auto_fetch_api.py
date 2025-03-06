@@ -57,10 +57,10 @@ def fetch_all_jobs(api_token, starting_page=0):
 
 # Run the script
 print("Fetching all jobs...")
-# all_jobs = fetch_all_jobs(API_TOKEN)
+all_jobs = fetch_all_jobs(API_TOKEN)
 
 ### FIXME: DEBUG ##################################################################
-all_jobs = fetch_all_jobs(API_TOKEN, starting_page=125)
+# all_jobs = fetch_all_jobs(API_TOKEN, starting_page=125)
 
 # Convert to DataFrame
 jobs_df = pd.DataFrame(all_jobs)

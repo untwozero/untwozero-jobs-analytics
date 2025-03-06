@@ -9,7 +9,7 @@ permissions:
   contents: write # This grants permission to push changes
 
 jobs:
-  fetch-data:
+  update-data:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,5 +38,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data/public/raw_jobs_df.csv data/public/clean_jobs_df.csv
-          git commit -m "Auto-update raw_jobs_df.csv [GitHub Actions]" || exit 0
+          git commit -m "Automated data update: Refresh raw_jobs_df.csv & clean_jobs_df.csv [GitHub Actions]" || exit 0
           git push

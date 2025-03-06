@@ -1,7 +1,8 @@
 import os
+from pathlib import Path
+
 import pandas as pd
 import requests
-from pathlib import Path
 
 # Get API Token directly from GitHub Secrets (Environment Variable)
 API_TOKEN = os.environ.get("UNTALENT_API_TOKEN")
@@ -14,13 +15,14 @@ if not API_TOKEN:
 ## Define paths
 
 print(f"Current working directory: {os.getcwd()}")
-#> Current working directory: /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics
+# > Current working directory: /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics
 
 DATA_DIR = Path("data")
 OUTPUT_DIR = DATA_DIR / "public"
 
 # Ensure required directories exist
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 def fetch_all_jobs(api_token, starting_page=0):
     """Fetch all jobs from the UNTALENT API with pagination."""
@@ -55,7 +57,10 @@ def fetch_all_jobs(api_token, starting_page=0):
 
 # Run the script
 print("Fetching all jobs...")
-all_jobs = fetch_all_jobs(API_TOKEN)
+# all_jobs = fetch_all_jobs(API_TOKEN)
+
+### FIXME: DEBUG ##################################################################
+all_jobs = fetch_all_jobs(API_TOKEN, starting_page=125)
 
 # Convert to DataFrame
 jobs_df = pd.DataFrame(all_jobs)
@@ -65,4 +70,4 @@ csv_path = OUTPUT_DIR / "raw_jobs_df.csv"
 jobs_df.to_csv(csv_path, index=False)
 
 print(f"Jobs saved to {csv_path}")
-#> Jobs saved to /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics/data/public/raw_jobs_df.csv
+# > Jobs saved to /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics/data/public/raw_jobs_df.csv

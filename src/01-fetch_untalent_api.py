@@ -11,7 +11,7 @@ Other filter params:
 
 import os
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import timedelta
 import time
 
 import pandas as pd
@@ -32,7 +32,7 @@ requests_cache.install_cache(
 
 
 # Fetch all jobs (Pagination)
-def fetch_all_jobs(api_token, starting_page=1):
+def fetch_all_jobs(api_token, starting_page=0):
     base_url = "https://untalent.org/api/v1/jobs"
     page = starting_page
     all_jobs = []

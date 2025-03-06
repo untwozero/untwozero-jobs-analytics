@@ -16,20 +16,13 @@ if not API_TOKEN:
 print(f"Current working directory: {os.getcwd()}")
 #> Current working directory: /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics
 
-
-ROOT_DIR = (
-    Path(__file__).resolve().parent.parent.parent
-)  # Assuming script is in src/github-actions/
-
-# DATA_DIR = ROOT_DIR / "data"
 DATA_DIR = Path("data")
 OUTPUT_DIR = DATA_DIR / "public"
 
 # Ensure required directories exist
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# FIXME: DEBUG Page
-def fetch_all_jobs(api_token, starting_page=126):
+def fetch_all_jobs(api_token, starting_page=0):
     """Fetch all jobs from the UNTALENT API with pagination."""
     base_url = "https://untalent.org/api/v1/jobs"
     page = starting_page

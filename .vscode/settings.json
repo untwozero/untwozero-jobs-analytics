@@ -17,5 +17,9 @@
 
     "editor.wordWrap": "on",
     "editor.wordWrapColumn": 80,
-    "editor.wrappingIndent": "indent"
+    "editor.wrappingIndent": "indent",
+    
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/fetch_data.yml"
+    ]
 }

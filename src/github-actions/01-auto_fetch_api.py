@@ -11,8 +11,12 @@ if not API_TOKEN:
     )
 
 # Define paths
+
+# Print the current working directory
+print(f"Current working directory: {os.getcwd()}")
+
 ROOT_DIR = (
-    Path(__file__).resolve().parent.parent
+    Path(__file__).resolve().parent.parent.parent
 )  # Assuming script is in src/github-actions/
 DATA_DIR = ROOT_DIR / "data"
 OUTPUT_DIR = DATA_DIR / "public"
@@ -20,8 +24,8 @@ OUTPUT_DIR = DATA_DIR / "public"
 # Ensure required directories exist
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-
-def fetch_all_jobs(api_token, starting_page=1):
+# FIXME: DEBUG Page
+def fetch_all_jobs(api_token, starting_page=126):
     """Fetch all jobs from the UNTALENT API with pagination."""
     base_url = "https://untalent.org/api/v1/jobs"
     page = starting_page

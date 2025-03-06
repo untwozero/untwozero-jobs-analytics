@@ -10,15 +10,19 @@ if not API_TOKEN:
         "No API Token found. Make sure UNTALENT_API_TOKEN is set in GitHub Secrets."
     )
 
-# Define paths
 
-# Print the current working directory
+## Define paths
+
 print(f"Current working directory: {os.getcwd()}")
+#> Current working directory: /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics
+
 
 ROOT_DIR = (
     Path(__file__).resolve().parent.parent.parent
 )  # Assuming script is in src/github-actions/
-DATA_DIR = ROOT_DIR / "data"
+
+# DATA_DIR = ROOT_DIR / "data"
+DATA_DIR = Path("data")
 OUTPUT_DIR = DATA_DIR / "public"
 
 # Ensure required directories exist
@@ -63,9 +67,9 @@ all_jobs = fetch_all_jobs(API_TOKEN)
 # Convert to DataFrame
 jobs_df = pd.DataFrame(all_jobs)
 
-# Export Data
+### Export Data ###
 csv_path = OUTPUT_DIR / "raw_jobs_df.csv"
-
 jobs_df.to_csv(csv_path, index=False)
 
 print(f"Jobs saved to {csv_path}")
+#> Jobs saved to /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics/data/public/raw_jobs_df.csv

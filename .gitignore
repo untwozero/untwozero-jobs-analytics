@@ -1,6 +1,16 @@
 ## Data
-*.csv
-*.pkl
+# *.csv
+# *.pkl
+
+# Ignore everything in the data/ directory
+data/**
+
+# Do not ignore subdirectories themselves
+!data/**/
+  
+# Do not ignore anything inside data/public/
+!data/public/
+!data/public/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

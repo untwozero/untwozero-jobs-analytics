@@ -42,3 +42,7 @@ pip install -r requirements.txt
 
 - https://raw.githubusercontent.com/untwozero/untwozero-jobs-analytics/refs/heads/main/data/public/clean_jobs_df.csv
 
+
+## Acknowledgments
+
+We would like to extend our sincere gratitude to [UNTalent](https://untalent.org/jobs) for providing us with access to their [API](https://github.com/UNTalent/Documentation?tab=readme-ov-file), which has made this project possible. A special thank you to [Nathanaël Khodl](https://github.com/Khodl) for their support and dedication in making this resource available.

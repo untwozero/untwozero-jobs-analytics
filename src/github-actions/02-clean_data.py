@@ -99,3 +99,4 @@ def get_redirect_url(url):
 #### Export ####
 
 df.to_csv(DATA_DIR / "public" / "clean_jobs_df.csv", index=False)
+df.to_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")

@@ -10,15 +10,14 @@ Other filter params:
 """
 
 import os
-from pathlib import Path
-from datetime import timedelta
 import time
+from datetime import timedelta
+from pathlib import Path
 
 import pandas as pd
 import requests
-from dotenv import load_dotenv
 import requests_cache
-
+from dotenv import load_dotenv
 
 data_folder = Path("data")
 db_path = data_folder / "database" / "api_cache.sqlite"
@@ -30,8 +29,7 @@ requests_cache.install_cache(
     expire_after=timedelta(hours=1),
 )
 
-
-# Fetch all jobs (Pagination)
+# Fetch all jobs (with pagination)
 def fetch_all_jobs(api_token, starting_page=0):
     base_url = "https://untalent.org/api/v1/jobs"
     page = starting_page

@@ -17,5 +17,7 @@
 
     "editor.wordWrap": "on",
     "editor.wordWrapColumn": 80,
-    "editor.wrappingIndent": "indent"
+    "editor.wrappingIndent": "indent",
+
+    "jupyter.interactiveWindow.textEditor.executeSelection": true
 }

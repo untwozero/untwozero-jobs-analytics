@@ -66,8 +66,8 @@ all_jobs = fetch_all_jobs(API_TOKEN)
 jobs_df = pd.DataFrame(all_jobs)
 
 ### Export Data ###
-csv_path = OUTPUT_DIR / "raw_jobs_df.csv"
-jobs_df.to_csv(csv_path, index=False)
+jobs_df.to_csv(OUTPUT_DIR / "raw_jobs_df.csv", index=False)
+jobs_df.to_pickle(OUTPUT_DIR / "raw_jobs_df.pkl")
 
-print(f"Jobs saved to {csv_path}")
+print(f"Jobs saved to {OUTPUT_DIR}")
 # > Jobs saved to /home/runner/work/untwozero-jobs-analytics/untwozero-jobs-analytics/data/public/raw_jobs_df.csv

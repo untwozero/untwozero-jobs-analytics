@@ -9,8 +9,6 @@ DATA_DIR = Path("data")
 df = pd.read_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")
 
 
-
-
 # -------------------------------
 # 1. UN 2.0 Keyword Dictionary (with Regex)
 # -------------------------------
@@ -171,6 +169,43 @@ df["is_un_org"] = df["company_name"].apply(
 
 data_folder = Path("data")
 df.to_csv(data_folder / "output" / "analyzed_jobs_df.csv", index=False)
+
+
+# TODO: preprocess list columns for Power BI, deal with multiple locations, etc.
+
+df_final = df[
+    [
+        "url",  # TODO: could be hashed as unique ID
+        "slug",  # TODO: could be hashed as unique ID
+        "title",  # TODO: could be further cleaned
+        "description",  # TODO: still needs to be cleaned/processed
+        # "areas", # processed
+        # "levels", # processed
+        # "company", # processed
+        # "locations", # processed
+        "expire_at",  # TODO: fill missings
+        "is_homebased",  # TODO: fill missings
+        "areas_clean",
+        "levels_clean",
+        "locations_names",
+        "locations_latitudes",
+        "locations_longitudes",
+        "company_name",
+        "company_slug",
+        "url_apply",  # TODO: fix redirects
+        "url_details",  # TODO: fix redirects
+        # "is_internship_level", # intermediary
+        # "is_internship_title", # intermediary
+        "is_internship",  # combined
+        "is_national_or_local",
+        "job_quintet",  # TODO: process in a way that is nicely ingestable for Power BI and deal with multiple matches
+        "is_un2.0_relevant",
+        "is_un_org",
+    ]
+]
+
+
+df_final.to_csv(data_folder / "public" / "analyzed_jobs_df.csv", index=False)
 
 ###### FIXME
 

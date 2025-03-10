@@ -9,6 +9,8 @@ DATA_DIR = Path("data")
 df = pd.read_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")
 
 
+
+
 # -------------------------------
 # 1. UN 2.0 Keyword Dictionary (with Regex)
 # -------------------------------
@@ -125,9 +127,12 @@ df["is_internship"] = df["is_internship_level"] | df["is_internship_title"]
 # ]
 
 
+# TODO: improve
 df["is_national_or_local"] = df["title"].str.contains(
     r"\b(?:national|local)\b", flags=re.IGNORECASE, na=False, regex=True
 )
+
+
 # df["is_national_or_local"].value_counts()
 
 # filtered_jobs = df[~(df["is_internship"]) & ~(df["is_national_or_local"])]

@@ -66,10 +66,6 @@ df["company_slug"] = df["company"].apply(
     lambda x: x.get("slug", pd.NA) if isinstance(x, dict) else pd.NA
 )
 
-# TODO: complement with string matching
-# df["is_internship_level"] = df["levels_clean"].apply(
-#     lambda x: any("internship" in level.lower() for level in x)
-# )
 
 df["expire_at"] = pd.to_datetime(df["expire_at"], errors="coerce")
 

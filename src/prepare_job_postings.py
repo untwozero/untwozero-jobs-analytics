@@ -8,8 +8,13 @@ DATA_DIR = Path("data")
 # df = pd.read_csv(DATA_DIR / "public" / "clean_jobs_df.csv")
 
 # this maintains list formatting
-df = pd.read_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")
+
+# TODO: read in analysis file
+# df = pd.read_pickle(DATA_DIR / "output" / "clean_jobs_df.pkl")
+
+# df = pd.read_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")
 # df.dtypes
+
 
 ############################################################################################
 
@@ -92,3 +97,11 @@ create_job_posting(df.iloc[495])
 
 # Apply function over all rows
 df["formatted_job_posting"] = df.apply(create_job_posting, axis=1)
+
+
+### Export ###
+
+
+# FIXME
+data_folder = Path("data")
+df.to_csv(data_folder / "output" / "job_postings_df.csv", index=False)

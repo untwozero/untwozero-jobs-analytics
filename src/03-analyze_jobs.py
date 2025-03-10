@@ -154,7 +154,7 @@ df["is_un2.0_relevant"] = df["job_quintet"].apply(
 )  # Ensures correct evaluation for empty lists
 
 
-relevant_jobs = df[df["is_relevant"]]
+relevant_jobs = df[df["is_un2.0_relevant"]]
 print(f"Found {len(relevant_jobs)} relevant jobs based on UN 2.0 keywords.")
 
 
@@ -169,6 +169,8 @@ df["is_un_org"] = df["company_name"].apply(
 
 # df[["company_name", "is_un_org"]]
 
+data_folder = Path("data")
+df.to_csv(data_folder / "output" / "analyzed_jobs_df.csv", index=False)
 
 ###### FIXME
 

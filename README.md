@@ -38,6 +38,12 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### Setting Environment Variables
+
+- Rename `.env-example` to `.env`
+- Now, copy in the secret API Key
+
+
 ## Access Data
 
 - https://raw.githubusercontent.com/untwozero/untwozero-jobs-analytics/refs/heads/main/data/public/clean_jobs_df.csv

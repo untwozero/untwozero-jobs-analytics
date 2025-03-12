@@ -194,8 +194,8 @@ df_final = df[
         "company_slug",
         "url_apply",  # TODO: fix redirects
         "url_details",  # TODO: fix redirects
-        # "is_internship_level", # intermediary
-        # "is_internship_title", # intermediary
+        # "is_internship_level", # intermediary variable
+        # "is_internship_title", # intermediary variable
         "is_internship",  # combined
         "is_national_or_local",
         "job_quintet",  # TODO: process in a way that is nicely ingestable for Power BI and deal with multiple matches
@@ -206,6 +206,7 @@ df_final = df[
 
 
 df_final.to_csv(data_folder / "public" / "analyzed_jobs_df.csv", index=False)
+df_final.to_pickle(data_folder / "public" / "analyzed_jobs_df.pkl")
 
 ###### FIXME
 

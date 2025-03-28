@@ -8,6 +8,7 @@ DATA_DIR = Path("data")
 # df = pd.read_csv(DATA_DIR / "public" / "clean_jobs_df.csv")
 df = pd.read_pickle(DATA_DIR / "public" / "clean_jobs_df.pkl")
 
+df
 
 # -------------------------------
 # 1. UN 2.0 Keyword Dictionary (with Regex)

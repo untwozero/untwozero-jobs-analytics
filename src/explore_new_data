@@ -1,3 +1,5 @@
+pip install langdetect deep-translator
+
 import json
 from pathlib import Path
 
@@ -6,7 +8,7 @@ import pandas as pd
 data_folder = Path("data")
 
 
-with open(data_folder / "input" / "2585.json") as f:
+with open(data_folder / "input" / "1.json") as f:
     json_data = json.load(f)
 
 
@@ -114,6 +116,89 @@ for skill, keywords in skills_map.items():
 
 df
 
+##Change job titel language where needed 
+
+
+from langdetect import detect
+from deep_translator import GoogleTranslator
+
+# Function to detect language and translate if needed
+def translate_if_not_english(text):
+    try:
+        if detect(text) != 'en':
+            return GoogleTranslator(source='auto', target='en').translate(text)
+        return text
+    except:
+        return text  # fallback if detection fails
+
+# Apply to your 'title' column
+df['title'] = df['title'].apply(translate_if_not_english)
+
+##Attempt Quintet callsification
+
+import re
+import pandas as pd
+
+# Define your job categorization dictionary
+job_categorization_dict = {
+    "Digital": [
+        r"\b(app(?:lication)? developer|app(?:lication)? development)\b",
+        r"\b(back[- ]?end developer|back[- ]?end development|backend developer|backend development)\b",
+        r"\b(chief information officer|cto|connectivity|cyber(?: security|security| developer| development)?)\b",
+        r"\b(digitali[sz]ation|digitization|ict|information (?:management|systems|technology))\b",
+        r"\b(internet of things|it (?:developer|development|expert|associate|advisor|consultant|officer))\b",
+        r"\b(process automation|software (?:architect|developer|development|engineer|engineering))\b",
+        r"\b(system(?:s)? (?:engineer|engineering)|telecomm(?:unications?)?)\b",
+        r"\b(ui/ux|ux/ui|ui(?: &|/)ux|ux(?: &|/)ui|ui(?: design| designer| developer)|ux(?: design| designer| developer))\b",
+        r"\b(web (?:developer|development|design|programming)|wordpress (?:developer|development))\b",
+    ],
+    "Data": [
+        r"\b(ai|artificial intelligence|analytics|automation (?:engineer|specialist))\b",
+        r"\b(business (?:analyst|intelligence)|data|geographic information|geospatial)\b",
+        r"\b(gis (?:analyst|specialist)|machine learning|ml (?:consultant|expert|engineer|developer|development))\b",
+        r"\b(monitoring|performance (?:analytics|metrics)|statistic(?:ian)?|statistical|statistics)\b",
+    ],
+    "Innovation": [
+        r"\b(concept (?:developer|development)|creative technologist|design thinking)\b",
+        r"\b(emerging technolog(?:y|ies)|frontier technolog(?:y|ies)|innovation|innovator)\b",
+        r"\b(open science|portfolio management|program management consultant|r&d|recovery roadmap|research and development)\b",
+        r"\b(solutions mapping)\b",
+    ],
+    "Strategic Foresight": [
+        r"\b(anticipation|strategy (?:consultant|development)|early ?warning|foresight|forecast(?:ing|er)?)\b",
+        r"\b(futurist|plan(?:ner|ning)?|preparedness|resource mobilization|risk|scenario(?:s)?)\b",
+        r"\b(strateg(?:ic|ist|y)|trend(?:s)?|vision(?:ary)?)\b",
+    ],
+    "Behavioral Science": [
+        r"\b(behavior(?:al)?|behaviour(?:al)?)\b",
+        r"\b(change management|cognition|cognitive|communications strategy|community|communal)\b",
+        r"\b(human factors|organisational behaviour|organizational behaviour|psychologist|social (?:network|cognition|policy|psychologist|theory))\b",
+    ],
+}
+
+# Function to classify based on raw_tags, title, and slug
+def classify_quintet(row):
+    text = ""
+    
+    # Combine text from all 3 columns (flatten list if raw_tags is list)
+    if isinstance(row['raw_tags'], list):
+        text += " ".join(row['raw_tags'])
+    elif pd.notna(row['raw_tags']):
+        text += str(row['raw_tags'])
+
+    text += " " + str(row['title']) + " " + str(row['slug'])
+
+    # Loop through all categories and patterns
+    for category, patterns in job_categorization_dict.items():
+        for pattern in patterns:
+            if re.search(pattern, text, flags=re.IGNORECASE):
+                return category
+    return "NA"
+
+# Apply to DataFrame
+df['quintet'] = df.apply(classify_quintet, axis=1)
+
+df
 
 ###############
 

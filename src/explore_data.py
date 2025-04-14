@@ -17,14 +17,14 @@ df = pd.DataFrame(json_data.get("jobs"))
 df.dtypes
 df
 
-## Wrangle time information  
+## Wrangle time information
 # Adjust time stamps
 
-df['first_import_at'] = pd.to_datetime(df['first_import_at'], unit='s')
+df["first_import_at"] = pd.to_datetime(df["first_import_at"], unit="s")
 
-df['last_seen_at'] = pd.to_datetime(df['last_seen_at'], unit='s')
+df["last_seen_at"] = pd.to_datetime(df["last_seen_at"], unit="s")
 
-df['expire_at'] = pd.to_datetime(df['expire_at'], unit='s')
+df["expire_at"] = pd.to_datetime(df["expire_at"], unit="s")
 
 # Adjust formatting
 

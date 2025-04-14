@@ -1,12 +1,13 @@
-pip install langdetect deep-translator
-
 import json
+import re
 from pathlib import Path
 
 import pandas as pd
+from deep_translator import GoogleTranslator
+from langdetect import detect
+
 
 data_folder = Path("data")
-
 
 with open(data_folder / "input" / "1.json") as f:
     json_data = json.load(f)
@@ -16,52 +17,58 @@ df = pd.DataFrame(json_data.get("jobs"))
 
 ####
 
-df.dtypes
-df
-
-
-## Wrangle time information  
+## Wrangle time information
 # Adjust time stamps
 
-df['first_import_at'] = pd.to_datetime(df['first_import_at'], unit='s')
-
-df['last_seen_at'] = pd.to_datetime(df['last_seen_at'], unit='s')
-
-df['expire_at'] = pd.to_datetime(df['expire_at'], unit='s')
+df["first_import_at"] = pd.to_datetime(df["first_import_at"], unit="s")
+df["last_seen_at"] = pd.to_datetime(df["last_seen_at"], unit="s")
+df["expire_at"] = pd.to_datetime(df["expire_at"], unit="s")
 
 # Ensure columns are in datetime format, then strip time
-date_columns = ['first_import_at', 'last_seen_at', 'expire_at']
+date_columns = ["first_import_at", "last_seen_at", "expire_at"]
 
 for col in date_columns:
     df[col] = pd.to_datetime(df[col]).dt.date
 
 
-
 # Generalized extractor with optional post-processing
-def extract_field(data, prefix, postprocess=None):
+# FIXME: unique function names
+def extract_field(data, prefix: str, postprocess=None):
     if isinstance(data, list):
         for item in data:
-            if item.startswith(prefix + '__'):
-                value = item.split(prefix + '__')[1]
+            if item.startswith(prefix + "__"):
+                value = item.split(prefix + "__")[1]
                 if postprocess:
                     return postprocess(value)
                 return value
     return None
 
+
 # Apply all field extractions
-df['contract_name'] = df['contract_data'].apply(lambda x: extract_field(x, 'contract_name'))
-df['experience_in_years'] = df['contract_data'].apply(
-    lambda x: extract_field(x, 'contract_experience', lambda v: int(v.replace('_years', '')))
+df["contract_name"] = df["contract_data"].apply(
+    lambda x: extract_field(x, "contract_name")
 )
-df['contract_family_name'] = df['contract_data'].apply(lambda x: extract_field(x, 'contract_family_name'))
-df['level'] = df['contract_data'].apply(lambda x: extract_field(x, 'contract_level'))
-df['remote'] = df['contract_data'].apply(lambda x: extract_field(x, 'tor_contract_remote_status'))
+df["experience_in_years"] = df["contract_data"].apply(
+    lambda x: extract_field(
+        x, "contract_experience", lambda v: int(v.replace("_years", ""))
+    )
+)
+df["contract_family_name"] = df["contract_data"].apply(
+    lambda x: extract_field(x, "contract_family_name")
+)
+
+
+df["level"] = df["contract_data"].apply(lambda x: extract_field(x, "contract_level"))
+df["remote"] = df["contract_data"].apply(
+    lambda x: extract_field(x, "tor_contract_remote_status")
+)
 
 # Remove leading underscore from contract_family_name
-df['contract_family_name'] = df['contract_family_name'].str.lstrip('_')
+df["contract_family_name"] = df["contract_family_name"].str.lstrip("_")
+
 
 # Enhanced extractor: works with custom separator
-def extract_field(data, prefix, postprocess=None, separator='__'):
+def extract_contract_data(data, prefix, postprocess=None, separator="__"):
     if isinstance(data, list):
         for item in data:
             if item.startswith(prefix + separator):
@@ -71,73 +78,75 @@ def extract_field(data, prefix, postprocess=None, separator='__'):
                 return value
     return None
 
-df['international'] = df['contract_data'].apply(
-    lambda x: extract_field(x, 'contract_family_staff', separator='_')
+
+df["international"] = df["contract_data"].apply(
+    lambda x: extract_contract_data(x, "contract_family_staff", separator="_")
 )
 
 
 ## preclean locations
-import re
+
 
 # Function to clean each location in the list
 def clean_locations(loc_list):
     if isinstance(loc_list, list):
-        return [re.sub(r'^tor__', '', loc) for loc in loc_list]
+        return [re.sub(r"^tor__", "", loc) for loc in loc_list]
     return loc_list  # in case it's not a list
 
-# Apply the cleaning function
-df['locations'] = df['locations'].apply(clean_locations)
 
-df
+# Apply the cleaning function
+df["locations"] = df["locations"].apply(clean_locations)
 
 ##Raw Tags #needs adjustment
 
 skills_map = {
     "data": ["data_analysis", "research_skills"],
     "management": ["program_management", "budget_management", "project_management"],
-    "policy": ["policy_coordination", "environmental_policy", "sustainable_development"],
-    "facilitation": ["stakeholder_engagement", "workshop_facilitation"]
+    "policy": [
+        "policy_coordination",
+        "environmental_policy",
+        "sustainable_development",
+    ],
+    "facilitation": ["stakeholder_engagement", "workshop_facilitation"],
 }
 
-import re
 
 def clean_tags(tag_list):
     if isinstance(tag_list, list):
-        return [re.sub(r'^\w+__', '', tag) for tag in tag_list]
+        return [re.sub(r"^\w+__", "", tag) for tag in tag_list]
     return []
 
-df['cleaned_tags'] = df['raw_tags'].apply(clean_tags)
+
+df["cleaned_tags"] = df["raw_tags"].apply(clean_tags)
+
 
 def tag_matcher(cleaned_list, keywords):
     return any(tag in keywords for tag in cleaned_list)
 
+
 for skill, keywords in skills_map.items():
-    df[f"requires_{skill}_skills"] = df['cleaned_tags'].apply(lambda tags: tag_matcher(tags, keywords))
+    df[f"requires_{skill}_skills"] = df["cleaned_tags"].apply(
+        lambda tags: tag_matcher(tags, keywords)
+    )
 
-df
+##Change job titel language where needed
 
-##Change job titel language where needed 
-
-
-from langdetect import detect
-from deep_translator import GoogleTranslator
 
 # Function to detect language and translate if needed
 def translate_if_not_english(text):
     try:
-        if detect(text) != 'en':
-            return GoogleTranslator(source='auto', target='en').translate(text)
+        if detect(text) != "en":
+            return GoogleTranslator(source="auto", target="en").translate(text)
         return text
-    except:
+    except Exception:
         return text  # fallback if detection fails
 
+
 # Apply to your 'title' column
-df['title'] = df['title'].apply(translate_if_not_english)
+df["title"] = df["title"].apply(translate_if_not_english)
 
 ##Attempt Quintet callsification
 
-import re
-import pandas as pd
 
 # Define your job categorization dictionary
 job_categorization_dict = {
@@ -176,17 +185,18 @@ job_categorization_dict = {
     ],
 }
 
+
 # Function to classify based on raw_tags, title, and slug
 def classify_quintet(row):
     text = ""
-    
-    # Combine text from all 3 columns (flatten list if raw_tags is list)
-    if isinstance(row['raw_tags'], list):
-        text += " ".join(row['raw_tags'])
-    elif pd.notna(row['raw_tags']):
-        text += str(row['raw_tags'])
 
-    text += " " + str(row['title']) + " " + str(row['slug'])
+    # Combine text from all 3 columns (flatten list if raw_tags is list)
+    if isinstance(row["raw_tags"], list):
+        text += " ".join(row["raw_tags"])
+    elif pd.notna(row["raw_tags"]):
+        text += str(row["raw_tags"])
+
+    text += " " + str(row["title"]) + " " + str(row["slug"])
 
     # Loop through all categories and patterns
     for category, patterns in job_categorization_dict.items():
@@ -195,13 +205,11 @@ def classify_quintet(row):
                 return category
     return "NA"
 
-# Apply to DataFrame
-df['quintet'] = df.apply(classify_quintet, axis=1)
 
-df
+# Apply to DataFrame
+df["quintet"] = df.apply(classify_quintet, axis=1)
 
 ###############
 
 
-
-
+# df.to_pickle(data_folder / "output" / "explored_data.pkl")

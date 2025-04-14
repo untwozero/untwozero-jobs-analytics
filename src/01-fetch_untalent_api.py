@@ -29,6 +29,7 @@ requests_cache.install_cache(
     expire_after=timedelta(hours=1),
 )
 
+
 # Fetch all jobs (with pagination)
 def fetch_all_jobs(api_token, starting_page=0):
     base_url = "https://untalent.org/api/v1/jobs"

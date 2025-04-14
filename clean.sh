@@ -5,7 +5,8 @@
 source .venv/bin/activate
 black src/
 isort src/
-pip freeze >requirements.txt
+pip pip install -r requirements.txt
+pip freeze > requirements.txt
 
 # Append Python version requirement (if not already present)
 # if ! grep -q "^python>=" requirements.txt; then
